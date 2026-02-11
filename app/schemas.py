@@ -1,10 +1,20 @@
 from pydantic import BaseModel, Field
+import re
+from pydantic import field_validator
+
 
 
 # --- Slot ---
 class SlotCreate(BaseModel):
     code: str
     capacity: int = Field(..., gt=0)
+
+    @field_validator("code")
+    def validate_code(cls, v):
+        if not re.match(r"^[A-Z][0-9]{1,2}$", v):
+            raise ValueError("Invalid slot code format (expected A1, B2, etc.)")
+        return v
+
 
 
 class SlotResponse(BaseModel):
