@@ -96,3 +96,27 @@ bulk_add_items() does not check:
 
 Result:
 Slot can overflow beyond defined capacity.
+---
+## Bug 6 – No Denomination Validation
+
+Endpoint:
+POST /purchase
+GET /purchase/change-breakdown
+
+Issue:
+System does not validate whether inserted cash follows supported denominations.
+
+Example:
+User can insert unrealistic values like 3 INR.
+
+Expected:
+Cash should match supported denominations or valid combinations.
+
+Actual:
+Any integer is accepted.
+
+Impact:
+Breaks real-world vending machine logic.
+
+Fix Suggestion:
+Validate cash against SUPPORTED_DENOMINATIONS or accept list of coins.
