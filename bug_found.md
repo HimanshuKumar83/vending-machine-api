@@ -29,9 +29,11 @@ Item price validation allowed price = 0.
 Schema used:
 
 ```python
-price: int = Field(..., ge=0)
+price: int = Field(..., ge=0)..
 
-## Bug 3 – Incorrect Slot Capacity Validation Logic
+
+Bug 3:
+
 
 **Endpoint:**  
 POST /slots/{slot_id}/items
