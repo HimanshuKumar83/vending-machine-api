@@ -29,20 +29,34 @@ Item price validation allowed price = 0.
 Schema used:
 
 ```python
-price: int = Field(..., ge=0)..
+price: int = Field(..., ge=0)
 
+Fix : change ge>0;
 
-Bug 3:
+/////////////////////////////////////////////////////////////////////////////////////////////
+Bug 3 – Incorrect Slot Capacity Validation Logic
 
-
-**Endpoint:**  
+Endpoint:
 POST /slots/{slot_id}/items
 
-**Issue:**  
+Issue:
 Per-slot capacity validation used incorrect comparison logic.
 
 Original logic:
 
-```python
 if slot.current_item_count + data.quantity < settings.MAX_ITEMS_PER_SLOT:
-    raise ValueError("capacity_exceeded").
+    raise ValueError("capacity_exceeded")
+
+
+This incorrectly rejected valid additions even when under capacity.
+
+Expected:
+Items should only be rejected when exceeding limits.
+
+Actual:
+Valid quantities were rejected.
+
+Fix Applied:
+
+if slot.current_item_count + data.quantity > settings.MAX_ITEMS_PER_SLOT:
+    raise ValueError("capacity_exceeded")
