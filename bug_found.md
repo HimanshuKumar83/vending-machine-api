@@ -120,3 +120,23 @@ Breaks real-world vending machine logic.
 
 Fix Suggestion:
 Validate cash against SUPPORTED_DENOMINATIONS or accept list of coins.
+---
+## Bug 6 – Slot Deletion Allowed When Not Empty
+
+Endpoint:
+DELETE /slots/{slot_id}
+
+Issue:
+API allows deleting slots even when they contain items.
+
+Test:
+Created slot → added items → deleted slot successfully.
+
+Expected:
+Deletion should be blocked if slot contains items.
+
+Actual:
+Slot deleted despite having items.
+
+Impact:
+Can cause data inconsistency and orphan records.
