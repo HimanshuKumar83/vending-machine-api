@@ -69,3 +69,30 @@ Fix Applied:
 if slot.current_item_count + data.quantity > settings.MAX_ITEMS_PER_SLOT:
     raise ValueError("capacity_exceeded")
 
+## Bug 4 – Bulk Add Ignores Slot Capacity
+
+Endpoint:
+POST /slots/{slot_id}/items/bulk
+
+Issue:
+Bulk add API does not validate slot capacity before adding items.
+
+Expected:
+Total quantity added in bulk should not exceed slot capacity.
+
+Actual:
+API allows adding items beyond slot capacity.
+
+Proof:
+Slot capacity = 5  
+Bulk request added quantities totaling more than 5  
+API still returned success.
+
+Cause:
+bulk_add_items() does not check:
+- slot capacity
+- MAX_ITEMS_PER_SLOT
+- current_item_count update
+
+Result:
+Slot can overflow beyond defined capacity.
