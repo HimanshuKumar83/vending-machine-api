@@ -17,29 +17,38 @@ Any string accepted
 Fix:
 Added regex validation for slot code format
 
+
+
 ## Bug 2 – Item Price Allowed to be Zero
 
-**Endpoint:**  
+Endpoint:  
 POST /slots/{slot_id}/items  
 POST /slots/{slot_id}/items/bulk
 
-**Issue:**  
+Issue:  
 Item price validation allowed price = 0.
 
 Schema used:
 
-```python
 price: int = Field(..., ge=0)
 
-Fix : change ge>0;
+Expected:  
+Price must be greater than 0 as per specification.
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-Bug 3 – Incorrect Slot Capacity Validation Logic
+Actual:  
+API accepted items with price = 0.
 
-Endpoint:
+Fix Applied:  
+Changed validation from ge=0 to gt=0.
+
+---
+
+## Bug 3 – Incorrect Slot Capacity Validation Logic
+
+Endpoint:  
 POST /slots/{slot_id}/items
 
-Issue:
+Issue:  
 Per-slot capacity validation used incorrect comparison logic.
 
 Original logic:
@@ -47,16 +56,16 @@ Original logic:
 if slot.current_item_count + data.quantity < settings.MAX_ITEMS_PER_SLOT:
     raise ValueError("capacity_exceeded")
 
+This rejected valid additions even when under capacity.
 
-This incorrectly rejected valid additions even when under capacity.
-
-Expected:
+Expected:  
 Items should only be rejected when exceeding limits.
 
-Actual:
+Actual:  
 Valid quantities were rejected.
 
 Fix Applied:
 
 if slot.current_item_count + data.quantity > settings.MAX_ITEMS_PER_SLOT:
     raise ValueError("capacity_exceeded")
+
