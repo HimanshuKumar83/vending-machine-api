@@ -97,7 +97,7 @@ bulk_add_items() does not check:
 Result:
 Slot can overflow beyond defined capacity.
 ---
-## Bug 6 – No Denomination Validation
+## Bug 5 – No Denomination Validation
 
 Endpoint:
 POST /purchase
