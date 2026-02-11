@@ -51,13 +51,28 @@ def bulk_add_items(db: Session, slot_id: str, entries: list[ItemBulkEntry]) -> i
         if e.quantity <= 0:
             continue
 
-        item = Item(name=e.name, price=e.price, slot_id=slot_id, quantity=e.quantity)
+        # ✅ Capacity validation
+        if slot.current_item_count + e.quantity > slot.capacity:
+            raise ValueError("capacity_exceeded")
+
+        item = Item(
+            name=e.name,
+            price=e.price,
+            slot_id=slot_id,
+            quantity=e.quantity
+        )
+
         db.add(item)
+
+        # ✅ Update count
+        slot.current_item_count += e.quantity
+
         added += 1
         db.commit()
         time.sleep(0.05)
 
     return added
+
 
 
 def list_items_by_slot(db: Session, slot_id: str) -> list[Item]:
